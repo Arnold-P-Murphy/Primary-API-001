@@ -1,28 +1,35 @@
-document.getElementById("uploadForm").addEventListener("submit", function(event) {
-    event.preventDefault();
-
-    // Get text input
-    let text = document.getElementById("textInput").value;
-    localStorage.setItem("savedText", text);
-    document.getElementById("savedText").innerText = "Saved Text: " + text;
-
-    // Get image input
-    let imageInput = document.getElementById("imageInput").files[0];
-    if (imageInput) {
-        let reader = new FileReader();
-        reader.onload = function(e) {
-            let imgElement = document.getElementById("uploadedImage");
-            imgElement.src = e.target.result;
-            imgElement.style.display = "block";
-        };
-        reader.readAsDataURL(imageInput);
-    }
-});
-
-// Load saved text on page load
 document.addEventListener("DOMContentLoaded", function() {
-    let savedText = localStorage.getItem("savedText");
-    if (savedText) {
-        document.getElementById("savedText").innerText = "Saved Text: " + savedText;
+    let uploadForm = document.getElementById("uploadForm");
+    let textInput = document.getElementById("textInput");
+    let imageInput = document.getElementById("imageInput");
+    let savedTextElement = document.getElementById("savedText");
+    let uploadedImage = document.getElementById("uploadedImage");
+
+    if (uploadForm && textInput && imageInput && savedTextElement && uploadedImage) {
+        uploadForm.addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            // Get text input
+            let text = textInput.value;
+            localStorage.setItem("savedText", text);
+            savedTextElement.innerText = "Saved Text: " + text;
+
+            // Get image input
+            let imageFile = imageInput.files[0];
+            if (imageFile) {
+                let reader = new FileReader();
+                reader.onload = function(e) {
+                    uploadedImage.src = e.target.result;
+                    uploadedImage.style.display = "block";
+                };
+                reader.readAsDataURL(imageFile);
+            }
+        });
+
+        // Load saved text on page load
+        let savedText = localStorage.getItem("savedText");
+        if (savedText) {
+            savedTextElement.innerText = "Saved Text: " + savedText;
+        }
     }
 });
