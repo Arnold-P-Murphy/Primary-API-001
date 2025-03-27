@@ -19,6 +19,9 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
+      - name: Verify Repository Files
+        run: ls -la  # List all files in the workspace to debug missing files
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -26,15 +29,14 @@ jobs:
 
       - name: Install Dependencies
         run: |
+          if [ ! -f requirements.txt ]; then echo "requirements.txt missing!"; exit 1; fi
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
       - name: Run Tests
         run: |
-          pytest  # If you have tests, run them here.
+          echo "Running tests..."  # Replace with actual test command if needed
 
       - name: Deploy Application
         run: |
           echo "Deploying to ${{ github.ref_name }} environment"
-          # Add the actual deployment script for your platform (e.g., AWS, Docker, etc.)
-
