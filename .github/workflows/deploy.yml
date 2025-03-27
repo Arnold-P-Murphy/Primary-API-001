@@ -1,0 +1,59 @@
+name: Deploy Python Application
+
+on:
+  push:
+    branches:
+      - dev
+      - stage
+      - release-candidate
+      - uat
+      - production
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ github.ref_name }}  # Dynamically picks environment based on the branch
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4  # Checkout the code from your repo
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"  # Set Python version to use in the workflow
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt  # Install the dependencies from your requirements.txt
+
+      - name: Run Tests
+        run: |
+          pytest  # If you have tests, run them here. You can also run other tests like linting.
+
+      - name: Deploy Application
+        run: |
+          echo "Deploying to ${{ github.ref_name }} environment"
+          # Here you would add the specific commands to deploy your app
+          # Example: Deploy to AWS, Azure, or another service depending on the environment
+          if [[ "${{ github.ref_name }}" == "dev" ]]; then
+            echo "Deploying to Dev Environment"
+            # Your deploy script/command for Dev
+          elif [[ "${{ github.ref_name }}" == "stage" ]]; then
+            echo "Deploying to Stage Environment"
+            # Your deploy script/command for Stage
+          elif [[ "${{ github.ref_name }}" == "release-candidate" ]]; then
+            echo "Deploying to Release Candidate"
+            # Your deploy script/command for Release Candidate
+          elif [[ "${{ github.ref_name }}" == "uat" ]]; then
+            echo "Deploying to UAT"
+            # Your deploy script/command for UAT
+          elif [[ "${{ github.ref_name }}" == "production" ]]; then
+            echo "Deploying to Production"
+            # Your deploy script/command for Production
+          elif [[ "${{ github.ref_name }}" == "main" ]]; then
+            echo "Deploying to Main"
+            # Your deploy script/command for Main
+          fi
